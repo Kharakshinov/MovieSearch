@@ -1,9 +1,10 @@
-package com.example.moviesearch
+package com.example.moviesearch.ui.poster
 
 import android.app.Activity
 import android.os.Bundle
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.example.moviesearch.R
 
 class PosterActivity : Activity() {
 
