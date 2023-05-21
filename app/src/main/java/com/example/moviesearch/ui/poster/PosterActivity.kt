@@ -2,7 +2,7 @@ package com.example.moviesearch.ui.poster
 
 import android.app.Activity
 import android.os.Bundle
-import com.example.moviesearch.Creator
+import com.example.moviesearch.util.Creator
 import com.example.moviesearch.R
 
 class PosterActivity : Activity() {
