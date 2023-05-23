@@ -4,16 +4,13 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.widget.Toast
 import com.example.moviesearch.util.Creator
 import com.example.moviesearch.R
 import com.example.moviesearch.domain.api.MoviesInteractor
 import com.example.moviesearch.domain.models.Movie
-import com.example.moviesearch.ui.movies.MoviesAdapter
 
 class MoviesSearchPresenter(private val view: MoviesView,
-                            private val context: Context,
-                            private val adapter: MoviesAdapter) {
+                            private val context: Context) {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
@@ -44,7 +41,7 @@ class MoviesSearchPresenter(private val view: MoviesView,
                         if (foundMovies != null) {
                             movies.clear()
                             movies.addAll(foundMovies)
-                            adapter.notifyDataSetChanged()
+                            view.updateMoviesList(movies)
                             view.showMoviesList(true)
                         }
                         if (errorMessage != null) {
@@ -64,11 +61,10 @@ class MoviesSearchPresenter(private val view: MoviesView,
         if (text.isNotEmpty()) {
             view.showPlaceholderMessage(true)
             movies.clear()
-            adapter.notifyDataSetChanged()
+            view.updateMoviesList(movies)
             view.changePlaceholderText(text)
             if (additionalMessage.isNotEmpty()) {
-                Toast.makeText(context, additionalMessage, Toast.LENGTH_LONG)
-                    .show()
+                view.showToast(additionalMessage)
             }
         } else {
             view.showPlaceholderMessage(false)
