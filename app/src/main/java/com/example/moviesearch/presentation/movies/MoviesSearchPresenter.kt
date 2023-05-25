@@ -9,13 +9,18 @@ import com.example.moviesearch.R
 import com.example.moviesearch.domain.api.MoviesInteractor
 import com.example.moviesearch.domain.models.Movie
 
-class MoviesSearchPresenter(private val view: MoviesView,
-                            private val context: Context) {
+class MoviesSearchPresenter(private val context: Context) {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
     }
+
+    private var view: MoviesView? = null
+
+    private var state: MoviesState? = null
+
+    private var latestSearchText: String? = null
 
     private val movies = ArrayList<Movie>()
 
@@ -27,12 +32,38 @@ class MoviesSearchPresenter(private val view: MoviesView,
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
+    fun searchDebounce(changedText: String) {
+        if (latestSearchText == changedText) {
+            return
+        }
+
+        this.latestSearchText = changedText
+
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+
+        val searchRunnable = Runnable { searchRequest(changedText) }
+
+        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+        handler.postAtTime(
+            searchRunnable,
+            SEARCH_REQUEST_TOKEN,
+            postTime,
+        )
+    }
+
+    fun attachView(view: MoviesView) {
+        this.view = view
+        state?.let { view.render(it) }
+    }
+
+    fun detachView() {
+        this.view = null
+    }
+
     private fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
 
-            view.render(
-                MoviesState.Loading
-            )
+            renderState(MoviesState.Loading)
 
             moviesInteractor.searchMovies(newSearchText, object : MoviesInteractor.MoviesConsumer {
                 override fun consume(foundMovies: List<Movie>?, errorMessage: String?) {
@@ -44,25 +75,26 @@ class MoviesSearchPresenter(private val view: MoviesView,
 
                         when {
                             errorMessage != null -> {
-                                view.render(
+                                renderState(
                                     MoviesState.Error(
-                                        errorMessage = context.getString(R.string.something_went_wrong)
+                                        errorMessage = context.getString(R.string.something_went_wrong),
                                     )
                                 )
+                                view?.showToast(errorMessage)
                             }
 
                             movies.isEmpty() -> {
-                                view.render(
+                                renderState(
                                     MoviesState.Empty(
-                                        message = context.getString(R.string.nothing_found)
+                                        message = context.getString(R.string.nothing_found),
                                     )
                                 )
                             }
 
                             else -> {
-                                view.render(
+                                renderState(
                                     MoviesState.Content(
-                                        movies = movies
+                                        movies = movies,
                                     )
                                 )
                             }
@@ -74,16 +106,8 @@ class MoviesSearchPresenter(private val view: MoviesView,
         }
     }
 
-    fun searchDebounce(changedText: String) {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-
-        val searchRunnable = Runnable { searchRequest(changedText) }
-
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime,
-        )
+    private fun renderState(state: MoviesState) {
+        this.state = state
+        this.view?.render(state)
     }
 }
