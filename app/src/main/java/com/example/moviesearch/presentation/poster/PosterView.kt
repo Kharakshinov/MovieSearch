@@ -1,6 +1,8 @@
 package com.example.moviesearch.presentation.poster
 
-interface PosterView {
+import moxy.MvpView
+
+interface PosterView: MvpView {
 
     fun setPoster(posterUrl: String)
 
