@@ -1,31 +1,47 @@
 package com.example.moviesearch.presentation.movies
 
-import android.content.Context
+import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import androidx.lifecycle.*
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.moviesearch.util.Creator
 import com.example.moviesearch.R
 import com.example.moviesearch.domain.api.MoviesInteractor
 import com.example.moviesearch.domain.models.Movie
-import moxy.MvpPresenter
+import com.example.moviesearch.util.SingleLiveEvent
 
-class MoviesSearchPresenter(private val context: Context): MvpPresenter<MoviesView>() {
+class MoviesSearchViewModel(application: Application): AndroidViewModel(application) {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
+
+        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                MoviesSearchViewModel(this[APPLICATION_KEY] as Application)
+            }
+        }
     }
 
     private var latestSearchText: String? = null
 
     private val movies = ArrayList<Movie>()
 
-    private val moviesInteractor = Creator.provideMoviesInteractor(context)
+    private val moviesInteractor = Creator.provideMoviesInteractor(getApplication<Application>())
 
     private val handler = Handler(Looper.getMainLooper())
 
-    override fun onDestroy() {
+    private val stateLiveData = MutableLiveData<MoviesState>()
+    fun observeState(): LiveData<MoviesState> = stateLiveData
+
+    private val showToast = SingleLiveEvent<String>()
+    fun observeShowToast(): LiveData<String> = showToast
+
+    override fun onCleared() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
@@ -55,7 +71,6 @@ class MoviesSearchPresenter(private val context: Context): MvpPresenter<MoviesVi
 
             moviesInteractor.searchMovies(newSearchText, object : MoviesInteractor.MoviesConsumer {
                 override fun consume(foundMovies: List<Movie>?, errorMessage: String?) {
-                    handler.post {
                         if (foundMovies != null) {
                             movies.clear()
                             movies.addAll(foundMovies)
@@ -65,16 +80,16 @@ class MoviesSearchPresenter(private val context: Context): MvpPresenter<MoviesVi
                             errorMessage != null -> {
                                 renderState(
                                     MoviesState.Error(
-                                        errorMessage = context.getString(R.string.something_went_wrong),
+                                        errorMessage = getApplication<Application>().getString(R.string.something_went_wrong),
                                     )
                                 )
-                                viewState.showToast(errorMessage)
+                                showToast.postValue(errorMessage)
                             }
 
                             movies.isEmpty() -> {
                                 renderState(
                                     MoviesState.Empty(
-                                        message = context.getString(R.string.nothing_found),
+                                        message = getApplication<Application>().getString(R.string.nothing_found),
                                     )
                                 )
                             }
@@ -88,13 +103,13 @@ class MoviesSearchPresenter(private val context: Context): MvpPresenter<MoviesVi
                             }
                         }
 
-                    }
+
                 }
             })
         }
     }
 
     private fun renderState(state: MoviesState) {
-        viewState.render(state)
+        stateLiveData.postValue(state)
     }
 }
