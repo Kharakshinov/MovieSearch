@@ -36,7 +36,7 @@ class MoviesSearchViewModel(application: Application): AndroidViewModel(applicat
     private val handler = Handler(Looper.getMainLooper())
 
     private val stateLiveData = MutableLiveData<MoviesState>()
-    fun observeState(): LiveData<MoviesState> = stateLiveData
+    fun observeState(): LiveData<MoviesState> = mediatorStateLiveData
 
     private val showToast = SingleLiveEvent<String>()
     fun observeShowToast(): LiveData<String> = showToast
@@ -62,6 +62,16 @@ class MoviesSearchViewModel(application: Application): AndroidViewModel(applicat
             SEARCH_REQUEST_TOKEN,
             postTime,
         )
+    }
+
+    fun toggleFavorite(movie: Movie) {
+        if (movie.inFavorite) {
+            moviesInteractor.removeMovieFromFavorites(movie)
+        } else {
+            moviesInteractor.addMovieToFavorites(movie)
+        }
+
+        updateMovieContent(movie.id, movie.copy(inFavorite = !movie.inFavorite))
     }
 
     private fun searchRequest(newSearchText: String) {
@@ -111,5 +121,32 @@ class MoviesSearchViewModel(application: Application): AndroidViewModel(applicat
 
     private fun renderState(state: MoviesState) {
         stateLiveData.postValue(state)
+    }
+
+    private fun updateMovieContent(movieId: String, newMovie: Movie) {
+        val currentState = stateLiveData.value
+
+        if (currentState is MoviesState.Content) {
+            val movieIndex = currentState.movies.indexOfFirst { it.id == movieId }
+
+            if (movieIndex != -1) {
+                stateLiveData.value = MoviesState.Content(
+                    currentState.movies.toMutableList().also {
+                        it[movieIndex] = newMovie
+                    }
+                )
+            }
+        }
+    }
+
+    private val mediatorStateLiveData = MediatorLiveData<MoviesState>().also { liveData ->
+        liveData.addSource(stateLiveData) { movieState ->
+            liveData.value = when (movieState) {
+                is MoviesState.Content -> MoviesState.Content(movieState.movies.sortedByDescending { it.inFavorite })
+                is MoviesState.Empty -> movieState
+                is MoviesState.Error -> movieState
+                is MoviesState.Loading -> movieState
+            }
+        }
     }
 }
