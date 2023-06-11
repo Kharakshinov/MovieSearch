@@ -5,33 +5,25 @@ import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import androidx.lifecycle.*
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.moviesearch.util.Creator
 import com.example.moviesearch.R
 import com.example.moviesearch.domain.api.MoviesInteractor
 import com.example.moviesearch.domain.models.Movie
 import com.example.moviesearch.util.SingleLiveEvent
 
-class MoviesSearchViewModel(application: Application): AndroidViewModel(application) {
+class MoviesSearchViewModel(
+    application: Application,
+    private val moviesInteractor: MoviesInteractor
+): AndroidViewModel(application) {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
 
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                MoviesSearchViewModel(this[APPLICATION_KEY] as Application)
-            }
-        }
     }
 
     private var latestSearchText: String? = null
 
     private val movies = ArrayList<Movie>()
-
-    private val moviesInteractor = Creator.provideMoviesInteractor(getApplication<Application>())
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -93,7 +85,7 @@ class MoviesSearchViewModel(application: Application): AndroidViewModel(applicat
                                         errorMessage = getApplication<Application>().getString(R.string.something_went_wrong),
                                     )
                                 )
-                                showToast.postValue(errorMessage)
+                                showToast.postValue(errorMessage!!)
                             }
 
                             movies.isEmpty() -> {

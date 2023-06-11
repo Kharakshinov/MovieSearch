@@ -1,19 +1,20 @@
 package com.example.moviesearch.ui.poster
 
-import android.app.Activity
 import android.os.Bundle
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.moviesearch.util.Creator
 import com.example.moviesearch.R
-import com.example.moviesearch.presentation.poster.PosterPresenter
-import com.example.moviesearch.presentation.poster.PosterView
+import com.example.moviesearch.presentation.poster.PosterState
+import com.example.moviesearch.presentation.poster.PosterViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PosterActivity : Activity(), PosterView {
+
+class PosterActivity : AppCompatActivity() {
 
     private lateinit var poster: ImageView
-
-    private lateinit var posterPresenter : PosterPresenter
+    private lateinit var posterUrl: String
+    private val viewModel by viewModel<PosterViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,18 +22,22 @@ class PosterActivity : Activity(), PosterView {
 
         poster = findViewById(R.id.poster)
 
-        val posterUrl = intent.extras?.getString("poster", "") ?: ""
+        posterUrl = intent.extras?.getString("poster", "") ?: ""
 
-        posterPresenter = Creator.providePosterPresenter(this, posterUrl)
+        viewModel.showPoster()
 
-        posterPresenter.onCreate()
+        viewModel.state.observe(this){ state ->
+            when(state){
+                PosterState.Content -> setPoster()
+            }
+        }
+
     }
 
-    override fun setPoster(posterUrl: String) {
+    private fun setPoster() {
         Glide.with(applicationContext)
             .load(posterUrl)
             .into(poster)
     }
-
 
 }
