@@ -1,5 +1,6 @@
 package com.example.moviesearch.di
 
+import com.example.moviesearch.presentation.cast.MoviesCastViewModel
 import com.example.moviesearch.presentation.movies.MoviesSearchViewModel
 import com.example.moviesearch.presentation.poster.AboutViewModel
 import com.example.moviesearch.presentation.poster.PosterViewModel
@@ -18,6 +19,10 @@ val viewModelModule = module {
 
     viewModel {(posterUrl: String) ->
         PosterViewModel(posterUrl)
+    }
+
+    viewModel { (movieId: String) ->
+        MoviesCastViewModel(movieId, get())
     }
 
 }

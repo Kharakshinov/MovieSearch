@@ -4,8 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesearch.R
 import com.example.moviesearch.databinding.ActivityMoviesCastBinding
+import com.example.moviesearch.presentation.cast.MoviesCastState
+import com.example.moviesearch.presentation.cast.MoviesCastViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class MoviesCastActivity: AppCompatActivity(R.layout.activity_movies_cast) {
 
@@ -19,6 +25,12 @@ class MoviesCastActivity: AppCompatActivity(R.layout.activity_movies_cast) {
         }
     }
 
+    private val moviesCastViewModel: MoviesCastViewModel by viewModel {
+        parametersOf(intent.getStringExtra(ARGS_MOVIE_ID))
+    }
+
+    private val adapter = MoviesCastAdapter()
+
     private lateinit var binding : ActivityMoviesCastBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,5 +39,41 @@ class MoviesCastActivity: AppCompatActivity(R.layout.activity_movies_cast) {
         binding = ActivityMoviesCastBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.moviesCastRecyclerView.adapter = adapter
+        binding.moviesCastRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        moviesCastViewModel.observeState().observe(this) {
+            when (it) {
+                is MoviesCastState.Content -> showContent(it)
+                is MoviesCastState.Error -> showError(it)
+                is MoviesCastState.Loading -> showLoading()
+            }
+        }
+    }
+
+    private fun showLoading() {
+        binding.contentContainer.isVisible = false
+        binding.errorMessageTextView.isVisible = false
+
+        binding.progressBar.isVisible = true
+    }
+
+    private fun showError(state: MoviesCastState.Error) {
+        binding.contentContainer.isVisible = false
+        binding.progressBar.isVisible = false
+
+        binding.errorMessageTextView.isVisible = true
+        binding.errorMessageTextView.text = state.message
+    }
+
+    private fun showContent(state: MoviesCastState.Content) {
+        binding.progressBar.isVisible = false
+        binding.errorMessageTextView.isVisible = false
+
+        binding.contentContainer.isVisible = true
+        binding.movieTitle.text = state.movie.fullTitle
+
+        adapter.persons = state.movie.directors + state.movie.writers + state.movie.actors + state.movie.others
+        adapter.notifyDataSetChanged()
     }
 }
