@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    >
+
+    <TextView android:id="@+id/errorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:textColor="@color/black"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <TextView android:id="@+id/filmName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:text="The Lord of the Rings: The Fellowship of the Ring"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/rating"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/filmName"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        android:text="Рейтинг IMDB:"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/ratingValue"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/filmName"
+        app:layout_constraintStart_toEndOf="@id/rating"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:lines="1"
+        android:ellipsize="end"
+        android:text="8.8"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/year"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/ratingValue"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        android:text="Год:"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/yearValue"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/ratingValue"
+        app:layout_constraintStart_toEndOf="@id/year"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="2001"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/country"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/yearValue"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        android:text="Страна:"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/countryValue"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/yearValue"
+        app:layout_constraintStart_toEndOf="@id/country"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="New Zealand, USA"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/genre"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/countryValue"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        android:text="Жанр:"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/genreValue"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/countryValue"
+        app:layout_constraintStart_toEndOf="@id/genre"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="Action, Adventure, Drama"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/director"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/genreValue"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        android:text="Режиссер:"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/directorValue"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/genreValue"
+        app:layout_constraintStart_toEndOf="@id/director"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="Peter Jackson"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/screenWriter"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/directorValue"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        android:text="Сценарист:"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/screenWriterValue"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/directorValue"
+        app:layout_constraintStart_toEndOf="@id/screenWriter"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="J.R.R. Tolkien, Fran Walsh, Philippa Boyens"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/inRoles"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/screenWriterValue"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        android:text="В ролях:"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/inRolesValue"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/screenWriterValue"
+        app:layout_constraintStart_toEndOf="@id/inRoles"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="Elijah Woold, Ian McKellen, Orlando Bloom"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/plot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/inRolesValue"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:text="Сюжет:"
+        android:textColor="@color/black"/>
+
+    <TextView android:id="@+id/plotValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/plot"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="The tales of Middle—Earth are a chronicle of the Great War for the Ring, a war that lasted for thousands of years. The one who owned the Ring received power over all living creatures, but was obliged to serve evil."
+        android:textColor="@color/black"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -4,4 +4,6 @@
     <string name="something_went_wrong">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="button_add_to_favourites">Иконка добавить в избранное</string>
     <string name="film_cover">Обложка фильма</string>
+    <string name="poster">Постер</string>
+    <string name="details">О фильме</string>
 </resources>

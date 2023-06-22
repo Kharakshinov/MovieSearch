@@ -14,7 +14,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.moviesearch.ui.poster.PosterActivity
+import com.example.moviesearch.ui.poster.DetailsActivity
 import com.example.moviesearch.R
 import com.example.moviesearch.domain.models.Movie
 import com.example.moviesearch.presentation.movies.MoviesSearchViewModel
@@ -31,8 +31,9 @@ class MoviesActivity : ComponentActivity() {
         object : MoviesAdapter.MovieClickListener {
             override fun onMovieClick(movie: Movie) {
                 if (clickDebounce()) {
-                    val intent = Intent(this@MoviesActivity, PosterActivity::class.java)
+                    val intent = Intent(this@MoviesActivity, DetailsActivity::class.java)
                     intent.putExtra("poster", movie.image)
+                    intent.putExtra("id", movie.id)
                     startActivity(intent)
                 }
             }

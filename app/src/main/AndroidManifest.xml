@@ -26,7 +26,7 @@
         </activity>
 
         <activity
-            android:name=".ui.poster.PosterActivity"
+            android:name=".ui.poster.DetailsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
