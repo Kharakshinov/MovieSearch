@@ -1,9 +1,12 @@
 package com.example.moviesearch.data
 
+import com.example.moviesearch.data.dto.MoviesDetailsRequest
+import com.example.moviesearch.data.dto.MoviesDetailsResponse
 import com.example.moviesearch.data.dto.MoviesSearchRequest
 import com.example.moviesearch.data.dto.MoviesSearchResponse
 import com.example.moviesearch.domain.api.MoviesRepository
 import com.example.moviesearch.domain.models.Movie
+import com.example.moviesearch.domain.models.MovieDetails
 import com.example.moviesearch.util.Resource
 
 class MoviesRepositoryImpl(
@@ -20,8 +23,30 @@ class MoviesRepositoryImpl(
             200 -> {
                 val stored = localStorage.getSavedFavorites()
 
-                Resource.Success((response as MoviesSearchResponse).results.map {
-                    Movie(it.id, it.resultType, it.image, it.title, it.description, inFavorite = stored.contains(it.id),)})
+                with(response as MoviesSearchResponse) {
+                    Resource.Success(results.map {
+                        Movie(it.id, it.resultType, it.image, it.title, it.description, inFavorite = stored.contains(it.id))})
+                }
+            }
+            else -> {
+                Resource.Error("Ошибка сервера")
+            }
+        }
+    }
+
+    override fun getMovieDetails(movieId: String): Resource<MovieDetails> {
+        val response = networkClient.doRequest(MoviesDetailsRequest(movieId))
+        return when (response.resultCode) {
+            -1 -> {
+                Resource.Error("Проверьте подключение к интернету")
+            }
+            200 -> {
+                with(response as MoviesDetailsResponse) {
+                    Resource.Success(
+                        MovieDetails(id, title, imDbRating, year,
+                        countries, genres, directors, writers, stars, plot)
+                    )
+                }
             }
             else -> {
                 Resource.Error("Ошибка сервера")

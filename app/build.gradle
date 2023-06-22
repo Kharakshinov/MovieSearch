@@ -8,6 +8,10 @@ android {
     namespace 'com.example.moviesearch'
     compileSdk 33
 
+    buildFeatures {
+        viewBinding true
+    }
+
     defaultConfig {
         applicationId "com.example.moviesearch"
         minSdk 26
@@ -52,4 +56,13 @@ dependencies {
     implementation "com.github.moxy-community:moxy:$moxyVersion"
     implementation "com.github.moxy-community:moxy-android:$moxyVersion"
     kapt "com.github.moxy-community:moxy-compiler:$moxyVersion"
+
+    //Koin
+    implementation "io.insert-koin:koin-android:3.3.0"
+
+    //Fragment
+    implementation("androidx.fragment:fragment-ktx:1.5.5")
+
+    //ViewPager2
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 }
