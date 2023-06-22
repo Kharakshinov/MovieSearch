@@ -1,8 +1,9 @@
 package com.example.moviesearch.presentation.cast
 
 import com.example.moviesearch.domain.models.MovieCastPerson
+import com.example.moviesearch.util.ui.RVItem
 
-sealed interface MoviesCastRVItem {
+sealed interface MoviesCastRVItem: RVItem {
 
     data class HeaderItem(
         val headerText: String,
