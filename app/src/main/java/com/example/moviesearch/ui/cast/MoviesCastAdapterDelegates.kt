@@ -5,7 +5,7 @@ import com.bumptech.glide.Glide
 import com.example.moviesearch.databinding.ListItemCastBinding
 import com.example.moviesearch.databinding.ListItemHeaderBinding
 import com.example.moviesearch.presentation.cast.MoviesCastRVItem
-import com.example.moviesearch.util.ui.RVItem
+import com.example.moviesearch.core.ui.RVItem
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 
 fun movieCastHeaderDelegate() = adapterDelegateViewBinding<MoviesCastRVItem.HeaderItem, RVItem, ListItemHeaderBinding>(

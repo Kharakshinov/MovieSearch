@@ -1,7 +1,7 @@
 package com.example.moviesearch.presentation.cast
 
 import com.example.moviesearch.domain.models.MovieCastPerson
-import com.example.moviesearch.util.ui.RVItem
+import com.example.moviesearch.core.ui.RVItem
 
 sealed interface MoviesCastRVItem: RVItem {
 

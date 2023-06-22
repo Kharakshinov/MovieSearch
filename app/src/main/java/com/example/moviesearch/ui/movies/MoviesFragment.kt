@@ -13,15 +13,15 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.moviesearch.R
+import com.example.moviesearch.core.navigation.Router
 import com.example.moviesearch.databinding.FragmentMoviesBinding
 import com.example.moviesearch.domain.models.Movie
 import com.example.moviesearch.presentation.movies.MoviesSearchViewModel
 import com.example.moviesearch.presentation.movies.MoviesState
 import com.example.moviesearch.ui.details.DetailsFragment
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MoviesFragment: Fragment() {
@@ -36,6 +36,7 @@ class MoviesFragment: Fragment() {
     private var textWatcher: TextWatcher? = null
     private val handler = Handler(Looper.getMainLooper())
     private val viewModel by viewModel<MoviesSearchViewModel>()
+    private val router: Router by inject()
 
     private lateinit var queryInput: EditText
     private lateinit var placeholderMessage: TextView
@@ -46,18 +47,12 @@ class MoviesFragment: Fragment() {
         object : MoviesAdapter.MovieClickListener {
             override fun onMovieClick(movie: Movie) {
                 if (clickDebounce()) {
-                    parentFragmentManager.commit {
-                        replace(
-                            R.id.rootFragmentContainerView,
-                            DetailsFragment.newInstance(
-                                movieId = movie.id,
-                                posterUrl = movie.image
-                            ),
-                            DetailsFragment.TAG
+                    router.openFragment(
+                        DetailsFragment.newInstance(
+                            movieId = movie.id,
+                            posterUrl = movie.image
                         )
-
-                        addToBackStack(DetailsFragment.TAG)
-                    }
+                    )
 
                 }
             }
